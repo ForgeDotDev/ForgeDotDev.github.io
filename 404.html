@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 | System Breach</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background-color: #050505;
+            overflow: hidden;
+        }
+
+        /* CRT Scanline Effect */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 100;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+        }
+
+        .glitch {
+            font-size: 8rem;
+            font-weight: 700;
+            position: relative;
+            text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff, 0.025em 0.04em 0 #fffc00;
+            animation: glitch 725ms infinite;
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff, 0.025em 0.04em 0 #fffc00; }
+            15% { text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff, 0.025em 0.04em 0 #fffc00; }
+            16% { text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.035em 0 #fc00ff, -0.05em -0.05em 0 #fffc00; }
+            49% { text-shadow: -0.05em -0.025em 0 #00fffc, 0.025em 0.035em 0 #fc00ff, -0.05em -0.05em 0 #fffc00; }
+            50% { text-shadow: 0.05em 0.035em 0 #00fffc, 0.03em 0 0 #fc00ff, 0 -0.04em 0 #fffc00; }
+            99% { text-shadow: 0.05em 0.035em 0 #00fffc, 0.03em 0 0 #fc00ff, 0 -0.04em 0 #fffc00; }
+            100% { text-shadow: -0.05em 0 0 #00fffc, -0.025em -0.04em 0 #fc00ff, -0.04em -0.01em 0 #fffc00; }
+        }
+
+        .terminal-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background: #3b82f6;
+            margin-left: 5px;
+            animation: blink 1s step-end infinite;
+        }
+
+        @keyframes blink {
+            from, to { opacity: 1; }
+            50% { opacity: 0; }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen text-blue-500 p-4">
+
+    <div class="text-center z-10">
+        <h1 class="glitch italic mb-0" data-text="404">404</h1>
+        
+        <div class="space-y-4">
+            <h2 class="text-xl md:text-2xl font-bold text-white uppercase tracking-[0.3em]">
+                Protocol Error: Page Not Found
+            </h2>
+            
+            <p class="text-slate-500 max-w-lg mx-auto text-sm leading-relaxed">
+                The requested resource has been moved, deleted, or exists in a parallel repository. 
+                Identity verified... access to this node is <span class="text-red-500">RESTRICTED</span>.
+            </p>
+
+            <div class="pt-8">
+                <a href="https://github.com/forgedotdev" class="inline-flex items-center px-8 py-3 border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-all duration-300 rounded-sm font-bold group">
+                    <span class="mr-2">cd /home</span>
+                    <span class="terminal-cursor"></span>
+                </a>
+            </div>
+        </div>
+
+        <div class="absolute top-10 left-10 opacity-10 text-[10px] text-left hidden lg:block pointer-events-none">
+            <p>> initializing forge_core...</p>
+            <p>> checking permissions...</p>
+            <p>> ERROR: NULL_POINTER_EXCEPTION</p>
+            <p>> stack_trace: 0x442af...</p>
+        </div>
+    </div>
+
+</body>
+</html>
