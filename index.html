@@ -18,23 +18,26 @@
         }
 
         .glass {
-            background: rgba(17, 24, 39, 0.7);
+            background: rgba(17, 24, 39, 0.8);
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .shimmer {
             position: relative;
             overflow: hidden;
         }
 
-        .shimmer::after {
+        /* Fixed Shimmer: Added pointer-events-none so it doesn't block clicks */
+        .shimmer-layer {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .shimmer-layer::after {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
             background: linear-gradient(45deg, transparent, rgba(255,255,255,0.03), transparent);
             transform: rotate(45deg);
             animation: shimmer 6s infinite linear;
@@ -44,55 +47,65 @@
             0% { transform: translateX(-100%) rotate(45deg); }
             100% { transform: translateX(100%) rotate(45deg); }
         }
+
+        /* Ensure input is always interactable */
+        input:focus {
+            background-color: rgba(15, 23, 42, 0.9) !important;
+        }
     </style>
 </head>
 <body class="text-slate-200 flex items-center justify-center min-h-screen p-6">
 
-    <div class="glass shimmer max-w-md w-full rounded-3xl p-8 shadow-2xl transition-all duration-500 hover:border-blue-500/30">
-        <div class="flex justify-center mb-6">
-            <div class="h-16 w-16 bg-gradient-to-tr from-blue-600 to-emerald-400 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-                <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
-                </svg>
-            </div>
-        </div>
+    <div class="glass max-w-md w-full rounded-3xl p-8 shadow-2xl transition-all duration-500 hover:border-blue-500/30">
+        <div class="shimmer-layer"></div>
 
-        <h1 class="text-center text-3xl font-extrabold tracking-tight text-white mb-2">
-            Forge<span class="text-blue-500">Dot</span>Dev
-        </h1>
-        <p class="text-center text-slate-400 text-sm mb-8">
-            Enter your GitHub alias to get write access to the forge.
-        </p>
-
-        <div class="space-y-4">
-            <div class="relative group">
-                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                    <span class="text-slate-500 group-focus-within:text-blue-500 transition-colors">github.com/</span>
+        <div class="relative z-10">
+            <div class="flex justify-center mb-6">
+                <div class="h-16 w-16 bg-gradient-to-tr from-blue-600 to-emerald-400 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
+                    <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
+                    </svg>
                 </div>
-                <input type="text" id="username" autocomplete="off" spellcheck="false"
-                    class="block w-full pl-28 pr-4 py-4 bg-slate-900/50 border border-slate-700 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all"
-                    placeholder="username">
             </div>
 
-            <button onclick="handleInvite()" id="submit-btn"
-                class="w-full relative group bg-white text-slate-950 font-bold py-4 rounded-xl transition-all duration-200 hover:bg-blue-50 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden">
-                <span id="btn-text">Request Access</span>
-            </button>
-        </div>
+            <h1 class="text-center text-3xl font-extrabold tracking-tight text-white mb-2">
+                Forge<span class="text-blue-500">Dot</span>Dev
+            </h1>
+            <p class="text-center text-slate-400 text-sm mb-8">
+                Enter your GitHub alias to get write access.
+            </p>
 
-        <div id="status-container" class="mt-6 hidden transition-all duration-300">
-            <div class="flex items-center p-4 rounded-lg border text-sm" id="status-box">
-                <p id="status-msg"></p>
+            <div class="space-y-4">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <span class="text-slate-500 text-sm">github.com/</span>
+                    </div>
+                    
+                    <input type="text" id="username" autocomplete="off" spellcheck="false"
+                        class="relative z-20 block w-full pl-28 pr-4 py-4 bg-slate-900 border border-slate-700 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all cursor-text"
+                        placeholder="username">
+                </div>
+
+                <button onclick="handleInvite()" id="submit-btn"
+                    class="relative z-20 w-full bg-white text-slate-950 font-bold py-4 rounded-xl transition-all duration-200 hover:bg-blue-50 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed">
+                    <span id="btn-text">Request Access</span>
+                </button>
             </div>
-        </div>
 
-        <p class="mt-8 text-center text-[10px] text-slate-600 uppercase tracking-[0.2em]">
-            Authorized Access Only • Forge Management System
-        </p>
+            <div id="status-container" class="mt-6 hidden transition-all duration-300">
+                <div class="flex items-center p-4 rounded-lg border text-sm" id="status-box">
+                    <p id="status-msg"></p>
+                </div>
+            </div>
+
+            <p class="mt-8 text-center text-[10px] text-slate-600 uppercase tracking-[0.2em]">
+                Authorized Access Only • Forge Management
+            </p>
+        </div>
     </div>
 
     <script>
-        // --- CONFIGURATION ---
+        // --- PASTE YOUR URL BELOW ---
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyqOgyYIZjyZWNnCal3z5CoR2-Z_n0vNXFgtd1NekrEj_xitqXpr-YgIxsRJqwsn0k/exec"; 
 
         async function handleInvite() {
@@ -104,13 +117,12 @@
             const statusMsg = document.getElementById('status-msg');
 
             if (!username) {
-                showStatus("Please enter a username", "error");
+                showStatus("Username is required", "error");
                 return;
             }
 
-            // UI Loading State
             btn.disabled = true;
-            btnText.innerText = "Verifying Identity...";
+            btnText.innerText = "Connecting to Forge...";
             statusContainer.classList.add('hidden');
 
             try {
@@ -122,26 +134,18 @@
                 const result = await response.json();
 
                 if (result.status === 201 || result.status === 200) {
-                    showStatus("Success! Invitation sent to " + username, "success");
-                    btnText.innerText = "Invitation Dispatched";
-                    
-                    // Confetti Party!
-                    confetti({
-                        particleCount: 150,
-                        spread: 70,
-                        origin: { y: 0.6 },
-                        colors: ['#3b82f6', '#10b981', '#ffffff']
-                    });
+                    showStatus("Success! Invite sent to " + username, "success");
+                    btnText.innerText = "Invite Sent";
+                    confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#3b82f6', '#10b981', '#ffffff'] });
                 } else {
                     const errorDetails = JSON.parse(result.body);
-                    showStatus(errorDetails.message || "Failed to send invite", "error");
+                    showStatus(errorDetails.message || "Invite failed", "error");
                     btnText.innerText = "Try Again";
                     btn.disabled = false;
                 }
-
             } catch (err) {
-                showStatus("Network error. Check your connection.", "error");
-                btnText.innerText = "System Offline";
+                showStatus("Network error. Verify Google Script deployment.", "error");
+                btnText.innerText = "Error";
                 btn.disabled = false;
             }
         }
@@ -150,7 +154,6 @@
             const container = document.getElementById('status-container');
             const box = document.getElementById('status-box');
             const msg = document.getElementById('status-msg');
-
             container.classList.remove('hidden');
             if (type === 'success') {
                 box.className = "flex items-center p-4 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-sm";
